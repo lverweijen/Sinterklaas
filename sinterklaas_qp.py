@@ -2,6 +2,8 @@ import cvxpy as cvx
 import numpy as np
 import attr
 import math
+from pprint import pprint
+from collections import defaultdict
 
 
 @attr.s
@@ -76,8 +78,6 @@ for registration in registrations:
             if first_kid is not None:
                 kid_leader_relations.append((first_kid, adult_index))
 
-
-
 groups = ['group ' + str(g + 1) for g in range(3)]
 
 n = len(kids)
@@ -104,7 +104,6 @@ def group_means(nums, group_num):
 
     return np.array(means)
 
-
 print('Children:')
 for kid in kids:
     print(kid)
@@ -114,7 +113,6 @@ print('Leaders:')
 for leader in leaders:
     print(leader)
 print()
-
 
 ages = [kid.age for kid in kids]
 means = group_means(ages, len(groups))
@@ -127,8 +125,9 @@ y = cvx.Variable(shape=(r, m), name="adult_in_group", boolean=True)
 genders = np.array([(kid.sex == 'f') - (kid.sex == 'm') for kid in kids])
 
 age_opt = cvx.sum(cvx.multiply(scores, x))
-sex_opt = cvx.sum((genders * x) ** 2)
-leader_opt = 0.1 * cvx.sum(y)
+sex_opt = cvx.sum((genders @ x) ** 2)
+leader_opt = cvx.sum(y @ means)
+
 obj = cvx.Minimize(age_opt + sex_opt + leader_opt)
 
 constraints = []
@@ -166,7 +165,7 @@ for (friend1, friend2) in kid_leader_relations:
 
 problem = cvx.Problem(obj, constraints)
 
-print("problem.get_problem_data(): {!r}".format(problem.get_problem_data(cvx.ECOS_BB)))
+pprint("problem.get_problem_data(): {!r}".format(problem.get_problem_data(cvx.ECOS_BB)))
 print()
 
 solution = problem.solve(verbose=False, solver=cvx.ECOS_BB)
@@ -177,15 +176,10 @@ print("sex_opt.value: {!r}".format(sex_opt.value))
 print("leader_opt.value: {!r}".format(leader_opt.value))
 print()
 
-# print("x.value: {!r}".format(x.value))
-
-
-from collections import defaultdict
 group_members = defaultdict(list)
 
 for l, leader in enumerate(leaders):
     g = np.argmax(y.value[l, :])
-    # print(leader, groups[g])
     group_members[groups[g]].append(leader)
 
 for k, kid in enumerate(kids):
