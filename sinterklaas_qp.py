@@ -6,6 +6,11 @@ from pprint import pprint
 from collections import defaultdict
 
 
+# Criterion weights (Is gender spread or equal age more important?)
+GENDER_BALANCE = 1
+EQUAL_AGE = 1
+
+
 @attr.s
 class Child(object):
     name = attr.ib()
@@ -19,7 +24,7 @@ class Leader(object):
 
 
 registrations = [
-    [Child('lisa', 12,'f')],
+    [Child('lisa', 12, 'f')],
     [Child('piet', 9, 'm')],
     [Child('jan', 8, 'm'), Child('dirk', 12, 'm'), Child('anne', 9, 'f')],
     [Child('bert', 6, 'm'), Child('ernie', 8, 'm'), Leader('dad of bert & ernie')],
@@ -128,7 +133,9 @@ age_opt = cvx.sum(cvx.multiply(scores, x))
 sex_opt = cvx.sum((genders @ x) ** 2)
 leader_opt = cvx.sum(y @ means)
 
-obj = cvx.Minimize(age_opt + sex_opt + leader_opt)
+obj = cvx.Minimize(EQUAL_AGE * age_opt +
+                   GENDER_BALANCE * sex_opt +
+                   leader_opt)
 
 constraints = []
 
@@ -165,8 +172,9 @@ for (friend1, friend2) in kid_leader_relations:
 
 problem = cvx.Problem(obj, constraints)
 
-pprint("problem.get_problem_data(): {!r}".format(problem.get_problem_data(cvx.ECOS_BB)))
-print()
+# print("problem.get_problem_data():")
+# pprint(problem.get_problem_data(cvx.ECOS_BB))
+# print()
 
 solution = problem.solve(verbose=False, solver=cvx.ECOS_BB)
 print("problem.status: {!r}".format(problem.status))
@@ -174,6 +182,10 @@ print("solution: {!r}".format(solution))
 print("age_opt.value: {!r}".format(age_opt.value))
 print("sex_opt.value: {!r}".format(sex_opt.value))
 print("leader_opt.value: {!r}".format(leader_opt.value))
+print()
+
+print("x.value:\n{!s}".format(x.value))
+print("y.value:\n{!s}".format(y.value))
 print()
 
 group_members = defaultdict(list)
@@ -184,7 +196,6 @@ for l, leader in enumerate(leaders):
 
 for k, kid in enumerate(kids):
     g = np.argmax(x.value[k, :])
-    # print(kid, groups[g])
     group_members[groups[g]].append(kid)
 
 for group in sorted(group_members.keys()):
