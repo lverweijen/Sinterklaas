@@ -1,0 +1,54 @@
+name: sinterklaas
+channels:
+  - conda-forge
+  - cvxgrp
+  - defaults
+dependencies:
+  - lapack=3.6.1
+  - libgfortran=3.0.0
+  - cvxcanon=0.1.1
+  - cvxpy=1.0.6
+  - ecos=2.0.5
+  - multiprocess=0.70.4
+  - scs=1.2.6
+  - attrs=18.2.0
+  - blas=1.0
+  - ca-certificates=2018.03.07
+  - certifi=2018.8.24
+  - cvxopt=1.2.0
+  - dill=0.2.8.2
+  - fastcache=1.0.2
+  - glpk=4.65
+  - gmp=6.1.2
+  - gsl=2.4
+  - intel-openmp=2019.0
+  - libedit=3.1.20170329
+  - libffi=3.2.1
+  - libgcc=7.2.0
+  - libgcc-ng=8.2.0
+  - libgfortran-ng=7.3.0
+  - libstdcxx-ng=8.2.0
+  - metis=5.1.0
+  - mkl=2019.0
+  - mkl_fft=1.0.6
+  - mkl_random=1.0.1
+  - ncurses=6.1
+  - numpy=1.15.2
+  - numpy-base=1.15.2
+  - openssl=1.0.2p
+  - pip=10.0.1
+  - python=3.6.2
+  - readline=6.2
+  - scipy=1.1.0
+  - setuptools=40.4.3
+  - six=1.11.0
+  - sqlite=3.13.0
+  - suitesparse=5.2.0
+  - tbb=2018.0.5
+  - tk=8.5.18
+  - toolz=0.9.0
+  - wheel=0.32.1
+  - xz=5.2.4
+  - zlib=1.2.11
+prefix: /home/laurent/anaconda3/envs/sinterklaas
+
