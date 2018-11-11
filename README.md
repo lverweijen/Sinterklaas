@@ -18,8 +18,10 @@ The solution is accomplished by use of [cvxpy](https://www.cvxpy.org/citing/inde
 
 ```
 # 1. Download and install Anaconda from https://www.anaconda.com/download/#linux
-$ bash Miniconda3-latest-Linux-x86_64.sh
+$ chmod +x Miniconda3-latest-Linux-x86_64.sh
+$ ./Miniconda3-latest-Linux-x86_64.sh
 $ conda env create -n sinterklaas --file requirements.txt
 $ conda activate sinterklaas
 ```
 
+So far I haven't been able to get it to work on native Windows, but it does work with [Ubuntu for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
